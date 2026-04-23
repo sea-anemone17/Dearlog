@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dearlog</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand-card">
+        <div class="brand-mark">✦</div>
+        <div>
+          <h1>Dearlog</h1>
+          <p>생성형 학습 + 메타인지 + 칭찬 강화</p>
+        </div>
+      </div>
+
+      <nav class="nav" id="navTabs">
+        <button class="nav-btn active" data-tab="dashboard">대시보드</button>
+        <button class="nav-btn" data-tab="subjects">과목</button>
+        <button class="nav-btn" data-tab="missions">미션</button>
+        <button class="nav-btn" data-tab="session">학습 세션</button>
+        <button class="nav-btn" data-tab="archive">아카이브</button>
+        <button class="nav-btn" data-tab="insights">분석</button>
+      </nav>
+
+      <section class="mini-panel">
+        <h2>오늘의 문장</h2>
+        <p id="dailyLine">나는 외우기 위해 공부하지 않는다. 만들기 위해 공부한다.</p>
+      </section>
+    </aside>
+
+    <main class="main">
+      <section class="tab active" id="tab-dashboard">
+        <div class="page-head">
+          <div>
+            <h2>대시보드</h2>
+            <p>오늘의 상태를 빠르게 점검하고 바로 시작하세요.</p>
+          </div>
+          <button class="primary-btn" id="jumpToSessionBtn">바로 세션 시작</button>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>오늘 상태</h3>
+            <div class="quick-status">
+              <label>기분
+                <input type="range" id="quickMood" min="1" max="5" value="3" />
+              </label>
+              <label>집중 예상
+                <input type="range" id="quickFocus" min="1" max="5" value="3" />
+              </label>
+              <label>시작 장벽
+                <input type="range" id="quickBarrier" min="1" max="5" value="2" />
+              </label>
+              <label>오늘 이걸 왜 하나?
+                <input type="text" id="quickWhy" placeholder="예: 창작에 쓰기 위해, 시험 대비, 설명하기 위해" />
+              </label>
+            </div>
+            <button class="secondary-btn" id="saveQuickStatusBtn">오늘 상태 저장</button>
+          </article>
+
+          <article class="card emphasis">
+            <h3>오늘의 분석</h3>
+            <p id="todayAnalysis">아직 충분한 기록이 없어요. 첫 세션을 남기면 Dearlog가 패턴을 읽기 시작합니다.</p>
+            <div class="praise-box" id="dashboardPraise">오늘도 구조를 하나 만들어 봅시다 ✨</div>
+          </article>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <div class="section-head-inline">
+              <h3>최근 생성 결과</h3>
+            </div>
+            <div id="recentGenerated" class="list-stack empty">아직 생성 기록이 없습니다.</div>
+          </article>
+
+          <article class="card">
+            <div class="section-head-inline">
+              <h3>최근 메타인지</h3>
+            </div>
+            <div id="recentMeta" class="list-stack empty">아직 메타인지 기록이 없습니다.</div>
+          </article>
+        </div>
+      </section>
+
+      <section class="tab" id="tab-subjects">
+        <div class="page-head">
+          <div>
+            <h2>과목 관리</h2>
+            <p>학교 과목과 개인 프로젝트를 같은 위상으로 관리하세요.</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>과목 추가</h3>
+            <form id="subjectForm" class="form-stack">
+              <label>과목 이름
+                <input type="text" id="subjectName" required placeholder="예: 영어, 철학, TRPG 룰, 창작 영어" />
+              </label>
+              <label>색상
+                <input type="color" id="subjectColor" value="#7c9dff" />
+              </label>
+              <label>아이콘
+                <input type="text" id="subjectIcon" placeholder="예: ✍️ 📘 ⚙️" maxlength="4" />
+              </label>
+              <label>설명
+                <textarea id="subjectDescription" rows="3" placeholder="이 과목을 어떻게 공부하고 싶은지 적어 주세요."></textarea>
+              </label>
+              <button class="primary-btn" type="submit">과목 저장</button>
+            </form>
+          </article>
+
+          <article class="card">
+            <h3>과목 목록</h3>
+            <div id="subjectList" class="list-stack"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="tab" id="tab-missions">
+        <div class="page-head">
+          <div>
+            <h2>미션 빌더</h2>
+            <p>과목별로 나만의 학습 트리거를 설계하세요.</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>미션 추가</h3>
+            <form id="missionForm" class="form-stack">
+              <label>과목
+                <select id="missionSubject" required></select>
+              </label>
+              <label>미션 이름
+                <input type="text" id="missionTitle" required placeholder="예: 문장 구조 분석, 조건 바꿔 문제 만들기" />
+              </label>
+              <label>미션 프롬프트
+                <textarea id="missionPrompt" rows="4" placeholder="예: 이 문장을 캐릭터 대사로 바꿔 보세요."></textarea>
+              </label>
+              <button class="primary-btn" type="submit">미션 저장</button>
+            </form>
+          </article>
+
+          <article class="card">
+            <h3>미션 목록</h3>
+            <div id="missionList" class="list-stack"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="tab" id="tab-session">
+        <div class="page-head">
+          <div>
+            <h2>학습 세션</h2>
+            <p>입력 → 구조화 → 생성 → 검증 → 메타인지 순서로 기록합니다.</p>
+          </div>
+        </div>
+
+        <form id="studyForm" class="form-grid">
+          <article class="card">
+            <h3>기본 정보</h3>
+            <div class="form-stack">
+              <label>과목
+                <select id="studySubject" required></select>
+              </label>
+              <label>미션
+                <select id="studyMission"></select>
+              </label>
+              <label>세션 제목
+                <input type="text" id="studyTitle" required placeholder="예: 영어 본문 3과 구조 분석" />
+              </label>
+              <label>이걸 왜 공부하나요?
+                <input type="text" id="studyWhy" placeholder="예: 창작에 쓰기 위해, 설명 가능하게 만들기 위해" />
+              </label>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>입력 / 구조화</h3>
+            <div class="form-stack">
+              <label>원문 / 개념 / 문제
+                <textarea id="studyInput" rows="5" placeholder="학습 재료를 적어 주세요."></textarea>
+              </label>
+              <label>핵심 구조
+                <textarea id="studyCore" rows="3" placeholder="이 자료의 핵심 구조를 적어 주세요."></textarea>
+              </label>
+              <label>어디에 쓸 수 있나요?
+                <input type="text" id="studyUsage" placeholder="예: 소설 문장, 시험 문제, 세계관 설명" />
+              </label>
+              <label>헷갈린 점
+                <textarea id="studyConfusion" rows="2" placeholder="막힌 부분을 적어 주세요."></textarea>
+              </label>
+            </div>
+          </article>
+
+          <article class="card feature-card">
+            <h3>생성 ⭐</h3>
+            <div class="form-stack">
+              <label>내가 만든 결과물
+                <textarea id="studyGenerated" rows="6" placeholder="문장 변형, 요약, 재작성, 문제 변형 등을 적어 주세요."></textarea>
+              </label>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>검증</h3>
+            <div class="form-stack">
+              <label>검증 방식
+                <select id="studyValidationType">
+                  <option value="self-check">셀프 체크</option>
+                  <option value="problem">문제풀이</option>
+                  <option value="quiz">퀴즈</option>
+                </select>
+              </label>
+              <label>검증 결과
+                <select id="studyValidationResult">
+                  <option value="">선택 안 함</option>
+                  <option value="correct">대체로 맞음</option>
+                  <option value="mixed">반반</option>
+                  <option value="wrong">막힘 / 틀림</option>
+                </select>
+              </label>
+              <label>막힌 이유 / 오답 원인
+                <textarea id="studyMistake" rows="3" placeholder="무엇이 막혔는지 적어 주세요."></textarea>
+              </label>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>메타인지 - 시작 전</h3>
+            <div class="quick-status">
+              <label>기분
+                <input type="range" id="metaBeforeMood" min="1" max="5" value="3" />
+              </label>
+              <label>집중 예상
+                <input type="range" id="metaBeforeFocus" min="1" max="5" value="3" />
+              </label>
+              <label>이해 예상
+                <input type="range" id="metaBeforeUnderstanding" min="1" max="5" value="3" />
+              </label>
+              <label>시작 장벽
+                <input type="range" id="metaBeforeBarrier" min="1" max="5" value="2" />
+              </label>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>메타인지 - 끝난 후</h3>
+            <div class="quick-status">
+              <label>실제 집중도
+                <input type="range" id="metaAfterFocus" min="1" max="5" value="3" />
+              </label>
+              <label>실제 이해도
+                <input type="range" id="metaAfterUnderstanding" min="1" max="5" value="3" />
+              </label>
+              <label>기억에 남은 정도
+                <input type="range" id="metaAfterMemory" min="1" max="5" value="3" />
+              </label>
+            </div>
+            <div class="form-stack top-gap">
+              <label>잘 먹힌 방식
+                <textarea id="metaWorked" rows="2" placeholder="예: 생성하고 나니 기억이 잘 남았다."></textarea>
+              </label>
+              <label>막힌 이유
+                <textarea id="metaBlocked" rows="2" placeholder="예: 구조는 잡혔는데 문법 이름이 헷갈렸다."></textarea>
+              </label>
+              <label>다음엔 어떻게 바꿀까?
+                <textarea id="metaImprove" rows="2" placeholder="예: 다음엔 문장 2개 더 만들어 본다."></textarea>
+              </label>
+            </div>
+          </article>
+
+          <article class="card emphasis span-all">
+            <h3>칭찬 엔진</h3>
+            <div id="livePraise" class="praise-box">생성 결과를 적으면 Dearlog가 칭찬을 건넵니다 ✨</div>
+          </article>
+
+          <div class="actions span-all">
+            <button type="submit" class="primary-btn">세션 저장</button>
+            <button type="button" class="ghost-btn" id="resetStudyBtn">입력 초기화</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="tab" id="tab-archive">
+        <div class="page-head">
+          <div>
+            <h2>아카이브</h2>
+            <p>내가 만든 결과물과 학습 패턴을 모아 봅니다.</p>
+          </div>
+        </div>
+
+        <div class="card filter-bar">
+          <label>과목 필터
+            <select id="archiveSubjectFilter"></select>
+          </label>
+          <label>검색
+            <input type="text" id="archiveSearch" placeholder="제목, 핵심 구조, 생성 결과 검색" />
+          </label>
+        </div>
+
+        <div id="archiveList" class="list-stack"></div>
+      </section>
+
+      <section class="tab" id="tab-insights">
+        <div class="page-head">
+          <div>
+            <h2>분석</h2>
+            <p>기록을 바탕으로 Dearlog가 학습 패턴을 읽습니다.</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>핵심 인사이트</h3>
+            <div id="insightsBox" class="list-stack"></div>
+          </article>
+          <article class="card">
+            <h3>과목별 요약</h3>
+            <div id="subjectStats" class="list-stack"></div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
