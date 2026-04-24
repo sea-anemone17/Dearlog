@@ -148,3 +148,26 @@ gonadiModeBtn.addEventListener('click', () => {
 });
 
 renderAll();
+
+import { ROLE_MODES } from "./roleMode.js";
+
+const roleModeSelect = document.getElementById("roleModeSelect");
+const roleModeBox = document.getElementById("roleModeBox");
+
+function renderRoleMode() {
+  roleModeSelect.innerHTML = Object.values(ROLE_MODES)
+    .map(mode => `
+      <option value="${mode.id}" ${data.settings.roleMode === mode.id ? "selected" : ""}>
+        ${mode.name}
+      </option>
+    `)
+    .join("");
+
+  const mode = ROLE_MODES[data.settings.roleMode] ?? ROLE_MODES.englishTeacher;
+
+  roleModeBox.innerHTML = `
+    <strong>${mode.role}</strong>
+    <p>${mode.opening}</p>
+    <p class="muted">오늘의 업무: ${mode.missionLabel}</p>
+  `;
+}
