@@ -21,6 +21,9 @@ export function createDefaultData() {
     ],
     studyItems: [],
     metaLogs: [],
-    settings: { praiseMode: 'normal' }
+    settings: {
+     praiseMode: 'normal',
+     roleMode: 'englishTeacher'
+    }
   };
 }
