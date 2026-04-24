@@ -16,7 +16,10 @@ export function loadData() {
       missions: parsed.missions ?? [],
       studyItems: parsed.studyItems ?? [],
       metaLogs: parsed.metaLogs ?? [],
-      settings: parsed.settings ?? { praiseMode: 'normal' }
+      settings: parsed.settings ?? {
+       praiseMode: "normal",
+       roleMode: "englishTeacher"
+      }
     };
   } catch {
     const data = createDefaultData();
