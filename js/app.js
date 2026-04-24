@@ -72,7 +72,7 @@ function renderRoleMode() {
   roleModeBox.innerHTML = `
     <strong>${mode.role}</strong>
     <p>${mode.opening}</p>
-    <p class="muted">오늘의 업무: ${mode.missionLabel}</p>
+    <p class="muted">오늘의 업무: ${mode.missionLabel ?? mode.mission}</p>
   `;
 }
 
