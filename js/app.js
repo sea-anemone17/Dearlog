@@ -6,6 +6,7 @@ import { getSummaryStats } from './meta.js';
 import { getPraise } from './praise.js';
 import { buildAnalysis } from './analytics.js';
 import { renderStats } from './dashboard.js';
+import { ROLE_MODES } from "./roleMode.js";
 
 let data = loadData();
 
@@ -35,6 +36,8 @@ const resetBtn = document.getElementById('resetBtn');
 const clearStudyFormBtn = document.getElementById('clearStudyFormBtn');
 const normalModeBtn = document.getElementById('normalModeBtn');
 const gonadiModeBtn = document.getElementById('gonadiModeBtn');
+const roleModeSelect = document.getElementById("roleModeSelect");
+const roleModeBox = document.getElementById("roleModeBox");
 
 function renderAll() {
   renderSubjectList(data, subjectList);
@@ -51,6 +54,26 @@ function renderAll() {
 function persistAndRender() {
   saveData(data);
   renderAll();
+}
+
+function renderRoleMode() {
+  if (!roleModeSelect || !roleModeBox) return;
+
+  roleModeSelect.innerHTML = Object.values(ROLE_MODES)
+    .map(mode => `
+      <option value="${mode.id}" ${data.settings?.roleMode === mode.id ? 'selected' : ''}>
+        ${mode.name}
+      </option>
+    `)
+    .join('');
+
+  const mode = ROLE_MODES[data.settings?.roleMode] ?? ROLE_MODES.englishTeacher;
+
+  roleModeBox.innerHTML = `
+    <strong>${mode.role}</strong>
+    <p>${mode.opening}</p>
+    <p class="muted">오늘의 업무: ${mode.missionLabel}</p>
+  `;
 }
 
 function updateModeButtons() {
@@ -141,33 +164,17 @@ normalModeBtn.addEventListener('click', () => {
   updateModeButtons();
 });
 
+roleModeSelect?.addEventListener('change', () => {
+  data.settings.roleMode = roleModeSelect.value;
+  saveData(data);
+  renderAll();
+});
+
 gonadiModeBtn.addEventListener('click', () => {
   data.settings.praiseMode = 'gonadi';
   saveData(data);
   updateModeButtons();
+  renderRoleMode();
 });
 
 renderAll();
-
-import { ROLE_MODES } from "./roleMode.js";
-
-const roleModeSelect = document.getElementById("roleModeSelect");
-const roleModeBox = document.getElementById("roleModeBox");
-
-function renderRoleMode() {
-  roleModeSelect.innerHTML = Object.values(ROLE_MODES)
-    .map(mode => `
-      <option value="${mode.id}" ${data.settings.roleMode === mode.id ? "selected" : ""}>
-        ${mode.name}
-      </option>
-    `)
-    .join("");
-
-  const mode = ROLE_MODES[data.settings.roleMode] ?? ROLE_MODES.englishTeacher;
-
-  roleModeBox.innerHTML = `
-    <strong>${mode.role}</strong>
-    <p>${mode.opening}</p>
-    <p class="muted">오늘의 업무: ${mode.missionLabel}</p>
-  `;
-}
